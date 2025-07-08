@@ -61,4 +61,26 @@ public class VocabularyController {
                 .path(request.getRequestURI())
                 .build();
     }
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ApiResponse<Void> deleteVocabulary(
+            @PathVariable("id") Long vocabularyId,
+            Authentication authentication,
+            HttpServletRequest request) {
+        User user = (User) authentication.getPrincipal();
+
+        vocabularyService.deleteVocabulary(user, vocabularyId);
+
+        return ApiResponse.<Void>builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.NO_CONTENT.value())
+                .success(true)
+                .message("Success")
+                .path(request.getRequestURI())
+                .build();
+    }
+
+
 }

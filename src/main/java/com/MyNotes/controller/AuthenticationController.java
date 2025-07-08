@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/auth")

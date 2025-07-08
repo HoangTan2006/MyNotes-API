@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -45,6 +46,18 @@ public class User extends AbstractEntity<Integer> implements UserDetails {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<Vocabulary> vocabularies;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(isLock, user.isLock) && Objects.equals(roles, user.roles) && Objects.equals(vocabularies, user.vocabularies);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, username, password, email, isLock, roles, vocabularies);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

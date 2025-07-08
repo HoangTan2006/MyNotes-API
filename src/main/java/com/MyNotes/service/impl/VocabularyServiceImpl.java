@@ -4,6 +4,8 @@ import com.MyNotes.dto.request.VocabularyRequest;
 import com.MyNotes.dto.response.VocabularyResponse;
 import com.MyNotes.entity.User;
 import com.MyNotes.entity.Vocabulary;
+import com.MyNotes.exception.UserException;
+import com.MyNotes.exception.VocabularyException;
 import com.MyNotes.mapper.VocabularyMapper;
 import com.MyNotes.repository.VocabularyRepository;
 import com.MyNotes.service.VocabularyService;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -38,5 +41,13 @@ public class VocabularyServiceImpl implements VocabularyService {
                 .stream()
                 .map(vocabularyMapper::toDTO)
                 .toList();
+    }
+
+    @Override
+    public void deleteVocabulary(User user, Long vocabularyId) {
+        Vocabulary vocabulary = vocabularyRepository.findById(vocabularyId).orElseThrow(() -> new VocabularyException("Vocabulary not found"));
+
+        if (Objects.equals(vocabulary.getUser().getId(), user.getId())) vocabularyRepository.delete(vocabulary);
+        else throw new UserException("Khong co quyen");
     }
 }

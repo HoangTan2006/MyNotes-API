@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: my-notes-database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - spring-net
+
+  spring-app:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: my-notes-api
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_PROFILE_ACTIVE: prod
+      SPRING_SQL_INIT_MODE: never
+    networks:
+      - spring-net
+
+volumes:
+  mysql-data:
+
+networks:
+  spring-net:
