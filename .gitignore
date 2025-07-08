@@ -36,7 +36,7 @@ build/
 .env
 
 ### DB ###
-data.sql
+#data.sql
 
 application-dev.properties
 application-prod.properties
